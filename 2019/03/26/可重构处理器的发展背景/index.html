@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          Hello World - Jerome&#39;s Blog
+          可重构计算处理器技术（一） - Jerome&#39;s Blog
         
     </title>
 
-    <link rel="canonical" href="http://yoursite-url/2019/03/24/hello-world/">
+    <link rel="canonical" href="http://yoursite-url/2019/03/26/可重构处理器的发展背景/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -69,7 +69,7 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('undefined')
+            background-image: url('null')
             /*post*/
         
     }
@@ -86,12 +86,14 @@
                     <div class="post-heading">
                         <div class="tags">
                             
+                              <a class="tag" href="/tags/#CGRA" title="CGRA">CGRA</a>
+                            
                         </div>
-                        <h1>Hello World</h1>
+                        <h1>可重构计算处理器技术（一）</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by Jerome on
-                            2019-03-24
+                            2019-03-26
                         </span>
                     </div>
                 
@@ -208,20 +210,65 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2><span id="quick-start">Quick Start</span></h2>
-<h3><span id="create-a-new-post">Create a new post</span></h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3><span id="run-server">Run server</span></h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3><span id="generate-static-files">Generate static files</span></h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3><span id="deploy-to-remote-sites">Deploy to remote sites</span></h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+                <blockquote>
+<p>本文基于魏少军教授、刘雷波教授、尹首一教授所著《可重构计算处理器技术》，分析可重构处理器的背景及技术问题。</p>
+</blockquote>
+<hr>
+<h1><span id="可重构处理器的提出">可重构处理器的提出</span></h1>
+<p>早在上世纪60年代，加州大学洛杉矶分校的Gerald Estrin教授便提出了计算机可以通过一块主处理器加上一组可重构硬件组成，硬件模式和软件模式都可以通过变换的数据流或控制流对系统结构和算法进行重新配置计算模式。<sup>[1]</sup></p>
+<hr>
+<h1><span id="可重构处理器的演进">可重构处理器的演进</span></h1>
+<h2><span id="指令流驱动和数据流驱动">指令流驱动和数据流驱动</span></h2>
+<p>指令流驱动的处理器通常有很强的灵活性，例如通用处理器（general purpose processor,GPP）、可编程数字信号处理器（programmabledigital signal processor,PDSP）、专用指令集处理器（application specific instruction-set processor.ASIP）和嵌入式处理器等。其执行一个指令需要有“取指”、“译码”、“寄存器访问”、“执行”和“数据回写”等过程。虽有指令流水线技术，但是在实际操作中更需要“执行”的带来的效率，“取指”、“译码”等行为占用机器周期时间以及能量。人们利用了许多改良方式，例如超标量、超长指令字（VLIW）、单指令多数据（SIMD）、多指令多数据（MIMD）等。<br>
+数据流驱动通常用于定制计算或专用计算，例如ASIC（application specific integrated circuit）。执行无需指令，所以执行速度快、功耗低，但灵活性和拓展性很差，无法满足不断提高的需求。针对不同的应用需要进行重新的专用芯片设计，因而硬件的设计往往严重落后于应用的发展。</p>
+<h2><span id="可重构计算的配置流">可重构计算的配置流</span></h2>
+<p>是一种将指令流的灵活性和数据流的高速度、低功耗结合的计算方式，是通过运行时动态改变运算单元阵列的功能，然后再通过数据流的方式进行计算。可重构硬件根据任务的性质进行拆分、重组，从而加速运算。</p>
+<hr>
+<h1><span id="可重构处理器的特点">可重构处理器的特点</span></h1>
+<ul>
+<li>1 制造后芯片的功能单元具有可重构能力</li>
+<li>2 能实现很大程度的算法到计算引擎的空间映射</li>
+</ul>
+<hr>
+<h1><span id="可重构处理器与其他处理器对比">可重构处理器与其他处理器对比</span></h1>
+<p>通用处理器（GPP）<br>
+拥有很高的灵活性，可通过编程进行多种应用，对应的NRE（Non-Recurring Engineering)成本很低。没有针对某一算法的优化，性能较差，功耗较高。</p>
+<p>数字信号处理器（DSP）<br>
+拥有较高的灵活性，可进行丰富的编程，内部经过数字信号处理的优化，对信号处理算法有一定效率和功耗优势。</p>
+<p>现场可编程门阵列（FPGA）<br>
+拥有很高的灵活性，其NRE成本也很低，对并行计算有较高的优势，需要进行编程改变逻辑资源的互连关系且建立时间较长，一旦建立性能较好，同时功耗较高。</p>
+<p>专用集成芯片（ASIC）<br>
+灵活性拓展性很差，同时NRE成本高，但对特定计算的性能很高且功耗很低，几乎不可编程。</p>
+<p>可重构处理器<br>
+拥有较高的灵活性，可动态改变逻辑功能，建立时间短，性能高且功耗低。</p>
+<hr>
+<h1><span id="典型的可重构处理器">典型的可重构处理器</span></h1>
+<h2><span id="mit的matrix">MIT的MATRIX</span></h2>
+<p>MATRIX<sup>[2]</sup>是麻省理工学院（MIT）1996年提出的一种新颖的粗粒度可重构计算架构，具有可配置指令的分配和可部署的资源。其设备资源被分配的控制和描述每个基本任务的计算，在特定应用程序的规则性下压缩被分配用于指令控制及分发的资源，从而在许多情况下为数据路径和计算获得更多计算资源。它通过支持数据路径和指令分发的统一可配置网络，以及可用作指令存储器，存储器元件或计算元件的粗粒度硬件模块实现其适应性。</p>
+<h2><span id="imec的adres">IMEC的ADRES</span></h2>
+<p>ADRES<sup>[3]</sup>的全称为Architecture for Dynamic Reconfigurable Embedded Systems（动态可重构嵌入式系统架构），是由微电子研究中心（IMEC）提出的一种新颖的架构，它具有紧密耦合的超长指令字（VLIW）处理器和粗粒度可重构矩阵。其优点包括简化的编程模型，共享资源成本和减少的通信开销。为了利用这种之前架构，IMEC在之前提出了一种新编译器框架（DRESC，Dynamically Reconfigurable Embedded System Compiler）<sup>[4]</sup>适用于新架构，使新架构具有良好的性能，并且易于编译。</p>
+<h2><span id="pact公司的xpp">PACT公司的XPP</span></h2>
+<p>eXtreme Processing Platform（XPP）<sup>[5]</sup>是一种基于自适应计算元素和面向分组的通信网络的分层阵列粗粒度可重构处理架构。</p>
+<h2><span id="iit的polymorphic-computing">IIT的Polymorphic Computing</span></h2>
+<p>美国伊利诺理工大学提出了一种新颖的多态架构，具有可编程存储器事件触发器和控制代理的新概念<sup>[6]</sup>。 该体系结构可以提供动态负载平衡，分布式控制，独立的内存和处理结构，可配置的内存块以及任务优化计算。</p>
+<h2><span id="国防科技大学的asra">国防科技大学的ASRA</span></h2>
+<p>国防科技大学提出了一种名为ASRA（Application Specific Reconfigurable Architecture）<sup>[7]</sup>的新型专用可重构架构，它由可重配置内核与超长指令字（VLIW）基本内核紧密集成。用于执行粗粒度自定义指令的可重新配置内核通过硬件加速为关键计算任务提供了改进的性能，并且通用指令的基本核心提供了足够的灵活性。运行时上下文管理器可以动态地选择自定义指令并将其绑定到适当的可重新配置结构，同时可以在运行时更改方案。</p>
+<h2><span id="pact公司的xpp-iii">PACT公司的XPP-III</span></h2>
+<p>XPP-III<sup>[8-9]</sup></p>
+<h2><span id="ipflex公司的dapdna-2">IPFlex公司的DAPDNA-2</span></h2>
+<p>DAPDNA-2<sup>[10]</sup></p>
+<h1><span id="参考文献">参考文献</span></h1>
+<hr>
+<p>[<a href="Reference/Parallel%20Processing%20in%20a%20Restructurable%20Computer%20System.pdf">1</a>] Estrin G , Bussell B , Turn R , et al. Parallel Processing in a Restructurable Computer System[J]. IEEE Transactions on Electronic Computers, 1964, EC-12(6):747-755.<br>
+[<a href="Reference/MATRIX_A%20Reconfigurable%20Computing%20Architecture%20with%20Configurable%20Instruction%20Distribution%20and%20Deployable%20Resources.pdf">2</a>] Mirsky E , Dehon A . MATRIX: a reconfigurable computing architecture with configurable instruction distribution and deployable resources[C]// IEEE Symposium on Fpgas for Custom Computing Machines. 1996.<br>
+[<a href="Reference/ADRES_An%20Architecture%20with%20Tightly%20Coupled%20VLIW%20Processor%20and%20Coarse-Grained%20Reconfigurable%20Matrix.pdf">3</a>]* Mei B , Vernalde S , Verkest D , et al. ADRES: An Architecture with Tightly Coupled VLIW Processor and Coarse-Grained Reconfigurable Matrix[C]// Field Programmable Logic and Application, 13th International Conference, FPL 2003, Lisbon, Portugal, September 1-3, 2003, Proceedings. DBLP, 2003.<br>
+[<a href="Reference/DRESC_a%20retargetable%20compiler%20for%20coarse-grained%20reconfigurable%20architectures.pdf">4</a>] Mei B , Vernalde S , Verkest D , et al. DRESC: a retargetable compiler for coarse-grained reconfigurable architectures[C]// IEEE International Conference on Field-programmable Technology. 2002.<br>
+[<a href="Reference/PACT%20XPP-A%20Self-Reconfigurable%20Data%20Processing%20Architecture.pdf">5</a>]* Baumgarte V , Ehlers G , May F , et al. PACT XPP—A Self-Reconfigurable Data Processing Architecture[J]. Journal of Supercomputing, 2003, 26(2):167-184.<br>
+[<a href="Reference/Polymorphic%20Computing_Definition,%20Trends,%20and%20a%20New%20Agent-Based%20Architecture.pdf">6</a>] Hentrich D , Oruklu E , Saniie J . Polymorphic Computing: Definition, Trends, and a New Agent-Based Architecture[J]. Circuits and Systems, 2011, 2(4):7.<br>
+[<a href="Reference/Implementation%20of%20high-throughput%20FFT%20processing%20on%20an%20application-specific%20reconfigurable%20processor.pdf">7</a>] Liu L , Yang Z , Li S , et al. Implementation of high-throughput FFT processing on an application-specific reconfigurable processor[C]// International Conference on Computer Science &amp; Network Technology. IEEE, 2013.<br>
+[<a href="Reference/A%20A%20heterogeneous%20digital%20signal%20processor%20implementation%20for%20dynamically%20reconfigurable%20computing.pdf">8</a>] Rossi D , Campi F , Deledda A , et al. A heterogeneous digital signal processor implementation for dynamically reconfigurable computing[C]// IEEE Custom Integrated Circuits Conference. IEEE, 2009.<br>
+[<a href="Reference/A%20Heterogeneous%20Digital%20Signal%20Processor%20for%20Dynamically%20Reconfigurable%20Computing.pdf">9</a>] Rossi D , Campi F , Spolzino S , et al. A Heterogeneous Digital Signal Processor for Dynamically Reconfigurable Computing[J]. IEEE Journal of Solid-State Circuits, 2010, 45(8):1615-1626.<br>
+[<a href="Reference/Implementation%20of%20dynamically%20reconfigurable%20processor%20DAPDNA-2.pdf">10</a>]* Sato T , Watanabe H , Shiba K . Implementation of dynamically reconfigurable processor DAPDNA-2[C]// IEEE Vlsi-tsa International Symposium on Vlsi Design. IEEE, 2005.</p>
 
                 
 
@@ -229,13 +276,9 @@
                 <!-- Pager -->
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/2019/03/26/可重构处理器的发展背景/" data-toggle="tooltip" data-placement="top" title="可重构计算处理器技术（一）">&larr; Previous Post</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/2017/03/18/hexo-theme-beantech/" data-toggle="tooltip" data-placement="top" title="[Hexo] Theme BeanTech">Next Post &rarr;</a>
+                            <a href="/2019/03/24/hello-world/" data-toggle="tooltip" data-placement="top" title="Hello World">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -260,6 +303,17 @@
             <!-- Tabe of Content -->
             <!-- Table of Contents -->
 
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">可重构处理器的提出</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">可重构处理器的演进</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">指令流驱动和数据流驱动</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">可重构计算的配置流</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">可重构处理器的特点</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">可重构处理器与其他处理器对比</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">典型的可重构处理器</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">5.1.</span> <span class="toc-nav-text">MIT的MATRIX</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">5.2.</span> <span class="toc-nav-text">IMEC的ADRES</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">5.3.</span> <span class="toc-nav-text">PACT公司的XPP</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">5.4.</span> <span class="toc-nav-text">IIT的Polymorphic Computing</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">5.5.</span> <span class="toc-nav-text">国防科技大学的ASRA</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">5.6.</span> <span class="toc-nav-text">PACT公司的XPP-III</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">5.7.</span> <span class="toc-nav-text">IPFlex公司的DAPDNA-2</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">参考文献</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
                 
             <!-- Sidebar Container -->
             <div class="
@@ -274,6 +328,8 @@
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
+                          <a class="tag" href="/tags/#CGRA" title="CGRA">CGRA</a>
+                        
                     </div>
                 </section>
                 
@@ -301,8 +357,8 @@
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "your-disqus-ID";
-    var disqus_identifier = "http://yoursite-url/2019/03/24/hello-world/";
-    var disqus_url = "http://yoursite-url/2019/03/24/hello-world/";
+    var disqus_identifier = "http://yoursite-url/2019/03/26/可重构处理器的发展背景/";
+    var disqus_url = "http://yoursite-url/2019/03/26/可重构处理器的发展背景/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
